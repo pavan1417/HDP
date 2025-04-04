@@ -11,7 +11,7 @@ from keras import regularizers
 from imblearn.over_sampling import SMOTE
 
 # Load dataset
-tdata = pd.read_csv("/content/Integrated.csv", header=None, na_values=[-9])
+tdata = pd.read_csv("Integrated.csv", header=None, na_values=[-9])
 
 # Select necessary columns
 new_data = tdata[[2,3,8,9,14,15,16,17,18,31,57]].copy()
