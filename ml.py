@@ -61,4 +61,53 @@ nn_model = Sequential([
 ])
 nn_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 nn_model.fit(training_X, training_y, epochs=50, verbose=0)
+# Function to Take User Input and Predict
+def predict_heart_attack():
+    print("\nEnter the following details to predict heart attack risk:")
+    age = float(input("Age: "))
+    sex = int(input("Sex (1=Male, 0=Female): "))
+    chest_pain = int(input("Chest Pain Level (0-4): "))
+    blood_pressure = float(input("Blood Pressure: "))
+    smoking_years = float(input("Years of Smoking: "))
+    fasting_blood_sugar = float(input("Fasting Blood Sugar: "))
+    diabetes_history = int(input("Diabetes History (1=Yes, 0=No): "))
+    family_history = int(input("Family History of Heart Disease (1=Yes, 0=No): "))
+    ecg = float(input("ECG: "))
+    pulse_rate = float(input("Pulse Rate: "))
 
+    # Prepare user input as an array
+    user_data = np.array([[age, sex, chest_pain, blood_pressure, smoking_years,
+                           fasting_blood_sugar, diabetes_history, family_history, ecg, pulse_rate]])
+
+    # *Fix: Apply same scaling as training data*
+    user_data[:, [0, 3, 4, 5, 8, 9]] = scaler.transform(user_data[:, [0, 3, 4, 5, 8, 9]])
+
+    # *Fix: Print probabilities for debugging*
+    svm_prob = svm_model.predict_proba(user_data)[0][1]
+    log_reg_prob = log_reg.predict_proba(user_data)[0][1]
+    knn_prob = knn.predict_proba(user_data)[0][1]
+    nn_prob = nn_model.predict(user_data)[0][0]
+
+    print("\nModel Probabilities:")
+    print(f"SVM Probability: {svm_prob:.2f}")
+    print(f"Logistic Regression Probability: {log_reg_prob:.2f}")
+    print(f"KNN Probability: {knn_prob:.2f}")
+    print(f"Neural Network Probability: {nn_prob:.2f}")
+
+    # *Fix: Adjust probability threshold*
+    threshold = 0.4  # Reduce threshold slightly to allow detecting more high-risk cases
+
+    svm_pred = svm_prob > threshold
+    log_reg_pred = log_reg_prob > threshold
+    knn_pred = knn_prob > threshold
+    nn_pred = nn_prob > threshold
+
+    # Show predictions
+    print("\nPredictions from different models:")
+    print(f"SVM Model Prediction: {'High Risk' if svm_pred else 'Low Risk'}")
+    print(f"Logistic Regression Prediction: {'High Risk' if log_reg_pred else 'Low Risk'}")
+    print(f"KNN Model Prediction: {'High Risk' if knn_pred else 'Low Risk'}")
+    print(f"Neural Network Prediction: {'High Risk' if nn_pred else 'Low Risk'}")
+
+# Call the function to take input and predict
+predict_heart_attack()
