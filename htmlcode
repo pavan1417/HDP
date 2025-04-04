@@ -10,10 +10,15 @@
             event.preventDefault();
             const formData = new FormData(event.target);
             const outputDiv = document.getElementById("output");
-            outputDiv.innerHTML = "<h3 class='text-lg font-bold mb-2'>Submitted Details:</h3>";
+
+            let outputHTML = "<h3 class='text-lg font-bold mb-2'>Submitted Details:</h3><div class='bg-gray-50 p-4 rounded-lg border'>";
+
             formData.forEach((value, key) => {
-                outputDiv.innerHTML += <p><strong>${key}:</strong> ${value}</p>;
+                outputHTML += `<p class="mb-1"><strong>${key}:</strong> ${value ? value : 'N/A'}</p>`;
             });
+
+            outputHTML += "</div>";
+            outputDiv.innerHTML = outputHTML;
         }
     </script>
 </head>
