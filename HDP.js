@@ -1,17 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("healthForm");
-    const outputDiv = document.getElementById("output");
 
     form.addEventListener("submit", function (event) {
         event.preventDefault();
         const formData = new FormData(form);
-        let outputHTML = "<h3>Submitted Details:</h3>";
+        let queryParams = new URLSearchParams();
 
         formData.forEach((value, key) => {
-            outputHTML += `<p><strong>${key}:</strong> ${value ? value : "N/A"}</p>`;
+            queryParams.append(key, value);
         });
 
-        outputDiv.innerHTML = outputHTML;
-        outputDiv.style.display = "block"; // Show output box
+        // Redirect to Streamlit app with form data
+        window.location.href = `https://your-streamlit-app-url.streamlit.app/?${queryParams.toString()}`;
     });
 });
